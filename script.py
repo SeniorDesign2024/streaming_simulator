@@ -61,7 +61,7 @@ def main():
 
   parser.add_argument('--username', '-u', type=str, default='test1', help='EATwAI username')
   parser.add_argument('--password', '-p', type=str, default='testPassword1', help='EATwAI password')
-  parser.add_argument('--event', '-e', type=str, default='660d8d58b3b072376b8382c', help='EATwAI event Id(must match user)')
+  parser.add_argument('--event', '-e', type=str, default='660d858b3b072376b8382c', help='EATwAI event Id(must match user)')
   parser.add_argument('--log', '-l', type=int, default='0', help='Print logs')
   parser.add_argument('--frames', '-f', type=int, default=maxInt, help='The number of frames to send, default is infinite')
   parser.add_argument('--rate', '-r', type=int, default=10000, help='The rate frames are sent in miliseconds')
@@ -128,9 +128,8 @@ def main():
             images[value] = [key]  # Create a new list with the key as the only
 
   print("Count: Image Path")
-  if(method == 'random' or individual):
-    user_count = ""
-
+  user_count = ""
+  if(method == 'random'):
     while frames:
       if(individual):
         user_count = None
@@ -159,7 +158,19 @@ def main():
     i = 0 if method == 'increasing' or 'wave_up' else sorted(images.keys())[-1]
     direction = 1 if method == 'increasing' or 'wave_up' else -1
     while frames:
-        image = random.choice(images[i])
+        if(individual):
+          user_count = None
+          while user_count == None:
+            try:
+              user_count = input()
+            except KeyboardInterrupt:
+              exit()
+            if(user_count and is_valid_integer_string(user_count)):
+              user_count = int(user_count)
+            elif(user_count != ""):
+              print(colored("Please enter a number", 'red'))
+              user_count = None
+        image = random.choice(images[user_count]) if user_count else random.choice(images[i])
         imagePath = os.path.join(imagesDirPath, image+'.jpg')
         if(log):
           print(colored(f'{i:04}: {imagePath}', 'green'))
@@ -178,7 +189,8 @@ def main():
               direction*growth))
         
         i = min_larger(images, i)
-        sleep(rate/1000)
+        if(not individual):
+          sleep(rate/1000)
 
 if __name__ == '__main__':
   just_fix_windows_console()
