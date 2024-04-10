@@ -29,7 +29,7 @@ def min_larger(dictionary, threshold):
 def max_smaller(dictionary, threshold):
     max_smaller_key = float('-inf')  # Initialize with negative infinity
     for key in dictionary:
-        if key < threshold and key > max_smaller_key:
+        if key <= threshold and key > max_smaller_key:
             max_smaller_key = key
     return max_smaller_key if max_smaller_key != float('-inf') else None
 
@@ -70,7 +70,7 @@ def main():
   parser.add_argument('--username', '-u', type=str, default='test1', help='EATwAI username')
   parser.add_argument('--password', '-p', type=str, default='testPassword1', help='EATwAI password')
   parser.add_argument('--event', '-e', type=str, default='660d858b3b072376b8382c', help='EATwAI event Id(must match user)')
-  parser.add_argument('--log', '-l', type=int, default='0', help='Print logs')
+  parser.add_argument('--log', '-l', type=int, default=0, help='Print logs')
   parser.add_argument('--frames', '-f', type=int, default=maxInt, help='The number of frames to send, default is infinite')
   parser.add_argument('--rate', '-r', type=int, default=10000, help='The rate frames are sent in miliseconds')
   parser.add_argument('--method', '-m', type=str, default="wave_up", help='The method for which a picture will be chosen. Choices are "random", "increasing", "decreasing, "wave_up", "wave_down"')
@@ -147,7 +147,7 @@ def main():
           except KeyboardInterrupt:
             exit()
           if(user_count and is_valid_integer_string(user_count)):
-            user_count = int(user_count)
+            user_count = max_smaller(images, int(user_count))
           elif(user_count != ""):
             print(colored("Please enter a number", 'red'))
             user_count = None
@@ -165,8 +165,6 @@ def main():
   else:
     i = 0 if method == 'increasing' or method == 'wave_up' else sorted(images.keys())[-1]
     direction = 1 if method == 'increasing' or method =='wave_up' else -1
-    print(direction)
-    print(method)
     while frames:
         if(individual):
           user_count = None
@@ -176,14 +174,16 @@ def main():
             except KeyboardInterrupt:
               exit()
             if(user_count and is_valid_integer_string(user_count)):
-              user_count = int(user_count)
+              user_count = max_smaller(images, int(user_count))
             elif(user_count != ""):
               print(colored("Please enter a number", 'red'))
               user_count = None
+
         image = random.choice(images[user_count]) if user_count else random.choice(images[i])
         imagePath = os.path.join(imagesDirPath, image+'.jpg')
         if(log):
-          print(colored(f'{i:04}: {imagePath}', 'green'))
+          print(colored(f'{(user_count if user_count else i):04}: {imagePath}', 'green'))
+
         proccessImage(imagePath, event, token)
         
         direction = (direction if i+direction*growth > 0 and i+direction*growth <= sorted(images.keys())[-1] else \
@@ -199,7 +199,7 @@ def main():
               direction*growth))
         
         i = min_larger(images, i) if (direction == 1) else max_smaller(images, i)
-        
+
         if(not individual):
           sleep(rate/1000)
 
