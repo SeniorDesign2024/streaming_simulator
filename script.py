@@ -26,6 +26,14 @@ def min_larger(dictionary, threshold):
       min_larger_key = key
   return min_larger_key if min_larger_key != float('inf') else None
 
+def max_smaller(dictionary, threshold):
+    max_smaller_key = float('-inf')  # Initialize with negative infinity
+    for key in dictionary:
+        if key < threshold and key > max_smaller_key:
+            max_smaller_key = key
+    return max_smaller_key if max_smaller_key != float('-inf') else None
+
+
 def proccessImage(imgPath: str, id: str, token: str):
   with open(imgPath, "rb") as imgFile:
     encodedImg = base64.b64encode(imgFile.read())
@@ -155,8 +163,10 @@ def main():
       if(not individual):
         sleep(rate/1000)
   else:
-    i = 0 if method == 'increasing' or 'wave_up' else sorted(images.keys())[-1]
-    direction = 1 if method == 'increasing' or 'wave_up' else -1
+    i = 0 if method == 'increasing' or method == 'wave_up' else sorted(images.keys())[-1]
+    direction = 1 if method == 'increasing' or method =='wave_up' else -1
+    print(direction)
+    print(method)
     while frames:
         if(individual):
           user_count = None
@@ -188,7 +198,8 @@ def main():
               (sorted(images.keys())[-1] if i+direction*growth > sorted(images.keys())[-1] else \
               direction*growth))
         
-        i = min_larger(images, i)
+        i = min_larger(images, i) if (direction == 1) else max_smaller(images, i)
+        
         if(not individual):
           sleep(rate/1000)
 
