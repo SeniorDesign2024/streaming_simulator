@@ -5,18 +5,19 @@ import os
 import base64
 import time
 
-def process_image(img_path: str, event_id: str, token: str):
-    with open(img_path, "rb") as img_file:
-        encoded_img = base64.b64encode(img_file.read()).decode("utf-8")
+def process_image(img_path: str, id: str, token: str):
+    with open(img_path, "rb") as imgFile:
+        encodedImg = base64.b64encode(imgFile.read())
+        encodedStr = "data:image/jpeg;base64,"+encodedImg.decode("utf-8")
 
     payload = json.dumps({
-        'event_id': event_id,
-        'image': encoded_img
+    'event_id' : id,
+    'image' : encodedStr
     })
 
     headers = {
-        'Content-Type': 'application/json',
-        'x-access-token': token
+    'Content-Type': 'application/json', 
+    'x-access-token': token
     }
 
     try:
