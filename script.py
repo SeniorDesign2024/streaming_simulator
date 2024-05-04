@@ -36,7 +36,7 @@ def main():
 
     parser.add_argument('--username', '-u', type=str, default='demo', help='EATwAI username')
     parser.add_argument('--password', '-p', type=str, default='thisistest3', help='EATwAI password')
-    parser.add_argument('--event', '-e', type=str, default='66245b4f0414180e35f9681d', help='EATwAI event Id(must match user)')
+    parser.add_argument('--event', '-e', type=str, default='6634fb4b1cd0632a33ebf657', help='EATwAI event Id(must match user)')
     parser.add_argument('--rate', '-r', type=int, default=10000, help='The rate frames are sent in milliseconds')
     parser.add_argument('--images-dir', '-i', type=str, default='./images', help='Directory path where images are stored')
 
