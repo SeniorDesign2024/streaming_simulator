@@ -24,3 +24,13 @@ In this example it `-l` will show logs `-r 5000` will send frames every 5 second
 python script.py -l 1 -i 1
 ```
 This let's you send individual frames manual. You an either hit enter to use the default mode of generation or enter the number of people you would like to see in the frame.
+
+## Density Branch (Another testing script)
+To access this branch, `git checkout density`.
+
+Follow this steps for setup:
+- Create an folder called `images` in the root directory.    
+- Paste the images you want to calculate count for.    
+- There is currently an example user and event for which you can test. If you wish to change, modify the code with another correct username, password, and eventid. It can be found in the database.    
+- run `python script.py` or `python3 script.py`.    
+- The result will be displayed on the frontend web application.    
